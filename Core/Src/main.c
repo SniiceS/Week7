@@ -130,9 +130,10 @@ int main(void)
 		if (micros() - Timestamp_Encoder >= 1000)
 		{
 			Timestamp_Encoder = micros();
+
 			EncoderVel = (EncoderVel * 99 + EncoderVelocity_Update()) / 100.0;
 			RPMcheck = ((RPMcheck * 99 + EncoderVel/3072) / 100);
-			error[1] = (RPMinput*3072) - EncoderVel;
+			error[1] = (RPMinput) - RPMcheck;
 			sumerror += error[1];
 			outputPWM[0] = (Kp*error[1]) + (Ki*sumerror) + Kd*(error[1]-error[0]);
 			error[0] = error[1];
@@ -142,7 +143,7 @@ int main(void)
 			}else if(RPMinput > 0){
 				outputPWM[1] = outputPWM[0];
 				outputPWM[2] = 0;
-			}else if(RPMinput < 0){
+			}else if(outputPWM[0] < 0){
 				outputPWM[1] = 0;
 				outputPWM[2] = (outputPWM[0])*-1;
 			}

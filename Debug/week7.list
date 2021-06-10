@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  16 .debug_macro  00015460  00000000  00000000  0002c248  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   000076b0  00000000  00000000  000416a8  2**0
+ 17 .debug_line   000076af  00000000  00000000  000416a8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    00088911  00000000  00000000  00048d58  2**0
+ 18 .debug_str    00088911  00000000  00000000  00048d57  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  000d1669  2**0
+ 19 .comment      0000007b  00000000  00000000  000d1668  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00002f68  00000000  00000000  000d16e4  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -634,6 +634,7 @@ int main(void)
  800076e:	460c      	mov	r4, r1
  8000770:	4a60      	ldr	r2, [pc, #384]	; (80008f4 <main+0x200>)
  8000772:	e9c2 3400 	strd	r3, r4, [r2]
+
 			EncoderVel = (EncoderVel * 99 + EncoderVelocity_Update()) / 100.0;
  8000776:	4b60      	ldr	r3, [pc, #384]	; (80008f8 <main+0x204>)
  8000778:	edd3 7a00 	vldr	s15, [r3]
@@ -660,96 +661,93 @@ int main(void)
  80007c2:	eec7 7a26 	vdiv.f32	s15, s14, s13
  80007c6:	4b4f      	ldr	r3, [pc, #316]	; (8000904 <main+0x210>)
  80007c8:	edc3 7a00 	vstr	s15, [r3]
-			error[1] = (RPMinput*3072) - EncoderVel;
+			error[1] = (RPMinput) - RPMcheck;
  80007cc:	4b4f      	ldr	r3, [pc, #316]	; (800090c <main+0x218>)
- 80007ce:	681a      	ldr	r2, [r3, #0]
- 80007d0:	4613      	mov	r3, r2
- 80007d2:	005b      	lsls	r3, r3, #1
- 80007d4:	4413      	add	r3, r2
- 80007d6:	029b      	lsls	r3, r3, #10
- 80007d8:	ee07 3a90 	vmov	s15, r3
- 80007dc:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 80007e0:	4b45      	ldr	r3, [pc, #276]	; (80008f8 <main+0x204>)
- 80007e2:	edd3 7a00 	vldr	s15, [r3]
- 80007e6:	ee77 7a67 	vsub.f32	s15, s14, s15
- 80007ea:	4b49      	ldr	r3, [pc, #292]	; (8000910 <main+0x21c>)
- 80007ec:	edc3 7a01 	vstr	s15, [r3, #4]
+ 80007ce:	681b      	ldr	r3, [r3, #0]
+ 80007d0:	ee07 3a90 	vmov	s15, r3
+ 80007d4:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 80007d8:	4b4a      	ldr	r3, [pc, #296]	; (8000904 <main+0x210>)
+ 80007da:	edd3 7a00 	vldr	s15, [r3]
+ 80007de:	ee77 7a67 	vsub.f32	s15, s14, s15
+ 80007e2:	4b4b      	ldr	r3, [pc, #300]	; (8000910 <main+0x21c>)
+ 80007e4:	edc3 7a01 	vstr	s15, [r3, #4]
 			sumerror += error[1];
- 80007f0:	4b47      	ldr	r3, [pc, #284]	; (8000910 <main+0x21c>)
- 80007f2:	ed93 7a01 	vldr	s14, [r3, #4]
- 80007f6:	4b47      	ldr	r3, [pc, #284]	; (8000914 <main+0x220>)
- 80007f8:	edd3 7a00 	vldr	s15, [r3]
- 80007fc:	ee77 7a27 	vadd.f32	s15, s14, s15
- 8000800:	4b44      	ldr	r3, [pc, #272]	; (8000914 <main+0x220>)
- 8000802:	edc3 7a00 	vstr	s15, [r3]
+ 80007e8:	4b49      	ldr	r3, [pc, #292]	; (8000910 <main+0x21c>)
+ 80007ea:	ed93 7a01 	vldr	s14, [r3, #4]
+ 80007ee:	4b49      	ldr	r3, [pc, #292]	; (8000914 <main+0x220>)
+ 80007f0:	edd3 7a00 	vldr	s15, [r3]
+ 80007f4:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 80007f8:	4b46      	ldr	r3, [pc, #280]	; (8000914 <main+0x220>)
+ 80007fa:	edc3 7a00 	vstr	s15, [r3]
 			outputPWM[0] = (Kp*error[1]) + (Ki*sumerror) + Kd*(error[1]-error[0]);
- 8000806:	4b44      	ldr	r3, [pc, #272]	; (8000918 <main+0x224>)
- 8000808:	681b      	ldr	r3, [r3, #0]
- 800080a:	ee07 3a90 	vmov	s15, r3
- 800080e:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 8000812:	4b3f      	ldr	r3, [pc, #252]	; (8000910 <main+0x21c>)
- 8000814:	edd3 7a01 	vldr	s15, [r3, #4]
- 8000818:	ee27 7a27 	vmul.f32	s14, s14, s15
- 800081c:	4b3f      	ldr	r3, [pc, #252]	; (800091c <main+0x228>)
- 800081e:	681b      	ldr	r3, [r3, #0]
- 8000820:	ee07 3a90 	vmov	s15, r3
- 8000824:	eef8 6ae7 	vcvt.f32.s32	s13, s15
- 8000828:	4b3a      	ldr	r3, [pc, #232]	; (8000914 <main+0x220>)
- 800082a:	edd3 7a00 	vldr	s15, [r3]
- 800082e:	ee66 7aa7 	vmul.f32	s15, s13, s15
- 8000832:	ee37 7a27 	vadd.f32	s14, s14, s15
- 8000836:	4b3a      	ldr	r3, [pc, #232]	; (8000920 <main+0x22c>)
- 8000838:	681b      	ldr	r3, [r3, #0]
- 800083a:	ee07 3a90 	vmov	s15, r3
- 800083e:	eef8 6ae7 	vcvt.f32.s32	s13, s15
- 8000842:	4b33      	ldr	r3, [pc, #204]	; (8000910 <main+0x21c>)
- 8000844:	ed93 6a01 	vldr	s12, [r3, #4]
- 8000848:	4b31      	ldr	r3, [pc, #196]	; (8000910 <main+0x21c>)
- 800084a:	edd3 7a00 	vldr	s15, [r3]
- 800084e:	ee76 7a67 	vsub.f32	s15, s12, s15
- 8000852:	ee66 7aa7 	vmul.f32	s15, s13, s15
- 8000856:	ee77 7a27 	vadd.f32	s15, s14, s15
- 800085a:	4b32      	ldr	r3, [pc, #200]	; (8000924 <main+0x230>)
- 800085c:	edc3 7a00 	vstr	s15, [r3]
+ 80007fe:	4b46      	ldr	r3, [pc, #280]	; (8000918 <main+0x224>)
+ 8000800:	681b      	ldr	r3, [r3, #0]
+ 8000802:	ee07 3a90 	vmov	s15, r3
+ 8000806:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 800080a:	4b41      	ldr	r3, [pc, #260]	; (8000910 <main+0x21c>)
+ 800080c:	edd3 7a01 	vldr	s15, [r3, #4]
+ 8000810:	ee27 7a27 	vmul.f32	s14, s14, s15
+ 8000814:	4b41      	ldr	r3, [pc, #260]	; (800091c <main+0x228>)
+ 8000816:	681b      	ldr	r3, [r3, #0]
+ 8000818:	ee07 3a90 	vmov	s15, r3
+ 800081c:	eef8 6ae7 	vcvt.f32.s32	s13, s15
+ 8000820:	4b3c      	ldr	r3, [pc, #240]	; (8000914 <main+0x220>)
+ 8000822:	edd3 7a00 	vldr	s15, [r3]
+ 8000826:	ee66 7aa7 	vmul.f32	s15, s13, s15
+ 800082a:	ee37 7a27 	vadd.f32	s14, s14, s15
+ 800082e:	4b3c      	ldr	r3, [pc, #240]	; (8000920 <main+0x22c>)
+ 8000830:	681b      	ldr	r3, [r3, #0]
+ 8000832:	ee07 3a90 	vmov	s15, r3
+ 8000836:	eef8 6ae7 	vcvt.f32.s32	s13, s15
+ 800083a:	4b35      	ldr	r3, [pc, #212]	; (8000910 <main+0x21c>)
+ 800083c:	ed93 6a01 	vldr	s12, [r3, #4]
+ 8000840:	4b33      	ldr	r3, [pc, #204]	; (8000910 <main+0x21c>)
+ 8000842:	edd3 7a00 	vldr	s15, [r3]
+ 8000846:	ee76 7a67 	vsub.f32	s15, s12, s15
+ 800084a:	ee66 7aa7 	vmul.f32	s15, s13, s15
+ 800084e:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 8000852:	4b34      	ldr	r3, [pc, #208]	; (8000924 <main+0x230>)
+ 8000854:	edc3 7a00 	vstr	s15, [r3]
 			error[0] = error[1];
- 8000860:	4b2b      	ldr	r3, [pc, #172]	; (8000910 <main+0x21c>)
- 8000862:	685b      	ldr	r3, [r3, #4]
- 8000864:	4a2a      	ldr	r2, [pc, #168]	; (8000910 <main+0x21c>)
- 8000866:	6013      	str	r3, [r2, #0]
+ 8000858:	4b2d      	ldr	r3, [pc, #180]	; (8000910 <main+0x21c>)
+ 800085a:	685b      	ldr	r3, [r3, #4]
+ 800085c:	4a2c      	ldr	r2, [pc, #176]	; (8000910 <main+0x21c>)
+ 800085e:	6013      	str	r3, [r2, #0]
 			if(RPMinput == 0){
- 8000868:	4b28      	ldr	r3, [pc, #160]	; (800090c <main+0x218>)
- 800086a:	681b      	ldr	r3, [r3, #0]
- 800086c:	2b00      	cmp	r3, #0
- 800086e:	d108      	bne.n	8000882 <main+0x18e>
+ 8000860:	4b2a      	ldr	r3, [pc, #168]	; (800090c <main+0x218>)
+ 8000862:	681b      	ldr	r3, [r3, #0]
+ 8000864:	2b00      	cmp	r3, #0
+ 8000866:	d108      	bne.n	800087a <main+0x186>
 				outputPWM[1] = 0;
+ 8000868:	4b2e      	ldr	r3, [pc, #184]	; (8000924 <main+0x230>)
+ 800086a:	f04f 0200 	mov.w	r2, #0
+ 800086e:	605a      	str	r2, [r3, #4]
+				outputPWM[2] = 0;
  8000870:	4b2c      	ldr	r3, [pc, #176]	; (8000924 <main+0x230>)
  8000872:	f04f 0200 	mov.w	r2, #0
- 8000876:	605a      	str	r2, [r3, #4]
-				outputPWM[2] = 0;
- 8000878:	4b2a      	ldr	r3, [pc, #168]	; (8000924 <main+0x230>)
- 800087a:	f04f 0200 	mov.w	r2, #0
- 800087e:	609a      	str	r2, [r3, #8]
- 8000880:	e01c      	b.n	80008bc <main+0x1c8>
+ 8000876:	609a      	str	r2, [r3, #8]
+ 8000878:	e020      	b.n	80008bc <main+0x1c8>
 			}else if(RPMinput > 0){
- 8000882:	4b22      	ldr	r3, [pc, #136]	; (800090c <main+0x218>)
- 8000884:	681b      	ldr	r3, [r3, #0]
- 8000886:	2b00      	cmp	r3, #0
- 8000888:	dd08      	ble.n	800089c <main+0x1a8>
+ 800087a:	4b24      	ldr	r3, [pc, #144]	; (800090c <main+0x218>)
+ 800087c:	681b      	ldr	r3, [r3, #0]
+ 800087e:	2b00      	cmp	r3, #0
+ 8000880:	dd08      	ble.n	8000894 <main+0x1a0>
 				outputPWM[1] = outputPWM[0];
- 800088a:	4b26      	ldr	r3, [pc, #152]	; (8000924 <main+0x230>)
- 800088c:	681b      	ldr	r3, [r3, #0]
- 800088e:	4a25      	ldr	r2, [pc, #148]	; (8000924 <main+0x230>)
- 8000890:	6053      	str	r3, [r2, #4]
+ 8000882:	4b28      	ldr	r3, [pc, #160]	; (8000924 <main+0x230>)
+ 8000884:	681b      	ldr	r3, [r3, #0]
+ 8000886:	4a27      	ldr	r2, [pc, #156]	; (8000924 <main+0x230>)
+ 8000888:	6053      	str	r3, [r2, #4]
 				outputPWM[2] = 0;
- 8000892:	4b24      	ldr	r3, [pc, #144]	; (8000924 <main+0x230>)
- 8000894:	f04f 0200 	mov.w	r2, #0
- 8000898:	609a      	str	r2, [r3, #8]
- 800089a:	e00f      	b.n	80008bc <main+0x1c8>
-			}else if(RPMinput < 0){
- 800089c:	4b1b      	ldr	r3, [pc, #108]	; (800090c <main+0x218>)
- 800089e:	681b      	ldr	r3, [r3, #0]
- 80008a0:	2b00      	cmp	r3, #0
- 80008a2:	da0b      	bge.n	80008bc <main+0x1c8>
+ 800088a:	4b26      	ldr	r3, [pc, #152]	; (8000924 <main+0x230>)
+ 800088c:	f04f 0200 	mov.w	r2, #0
+ 8000890:	609a      	str	r2, [r3, #8]
+ 8000892:	e013      	b.n	80008bc <main+0x1c8>
+			}else if(outputPWM[0] < 0){
+ 8000894:	4b23      	ldr	r3, [pc, #140]	; (8000924 <main+0x230>)
+ 8000896:	edd3 7a00 	vldr	s15, [r3]
+ 800089a:	eef5 7ac0 	vcmpe.f32	s15, #0.0
+ 800089e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 80008a2:	d50b      	bpl.n	80008bc <main+0x1c8>
 				outputPWM[1] = 0;
  80008a4:	4b1f      	ldr	r3, [pc, #124]	; (8000924 <main+0x230>)
  80008a6:	f04f 0200 	mov.w	r2, #0
